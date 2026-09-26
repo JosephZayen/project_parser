@@ -12,9 +12,12 @@ python ./make_project_json.py
 python globalSearchContent.py
 
 >>>{
->>>**/*.py
+>>>**/*.py,
+>>>**/*.html,
+>>>**/*.css
 >>>}
 
-#search all python files
+#search all python, html, css files
 #search results in search.txt
+#the object path glob method parses the entry (e.g. **/*.py stuff) in Unix style
 ```
