@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "make_project_json"
+version = "2026.09.27"
+description = "a cli tool for searching code by file name(unix style) and making project index in json"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+
+[project.scripts]
+gsearch = "globalSearchContent:main"

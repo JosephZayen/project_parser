@@ -4,10 +4,11 @@ import traceback
 from datetime import datetime, timezone
 from argparse import ArgumentParser
 
-BASE_DIR = Path(__file__).parent
-JSON_PATH = BASE_DIR / r"project.json"
-SEARCH_PATH = BASE_DIR / r"search.txt"
-LOG_PATH = BASE_DIR / r"logs.txt"
+# process relative, unrelated to the file position
+CWD = Path().cwd()
+JSON_PATH = CWD / r"gseach_project.json"
+SEARCH_PATH = CWD / r"gsearch_search.txt"
+LOG_PATH = CWD / r"logs.txt"
 
 SEARCH_SUFFIXES = [".py", ".txt", ".md", ".c", ".html", ".css", ".js", ".kt", ".ts", ".java", ".mjs", ".cpp", ".rs", "json"]
 
@@ -26,7 +27,7 @@ def make_json(store, dir_path):
             #recurse
             make_json(odir_store, sub_ofile)
 
-if(__name__ == "__main__"):
+def main():
     parser = ArgumentParser(
         usage=r"""
             -i --index     get project index,
@@ -42,8 +43,8 @@ if(__name__ == "__main__"):
         #Initialize some variables used for build directories.
         project = {}
         store = []
-        project[BASE_DIR.name] = store
-        make_json(store, BASE_DIR)
+        project[CWD.name] = store
+        make_json(store, CWD)
         with JSON_PATH.open("w", encoding="utf-8") as f:
             f.write(json.dumps(project, indent=2, ensure_ascii=False))
             f.flush()
@@ -73,7 +74,7 @@ if(__name__ == "__main__"):
             if not search_item.strip():
                 continue
             try:
-                results = BASE_DIR.glob(search_item.strip())
+                results = CWD.glob(search_item.strip())
             except Exception as e:
                 error_reason = {}
                 error_reason["type"] = type(e).__name__
@@ -88,7 +89,7 @@ if(__name__ == "__main__"):
 
         logs_json = json.dumps(logs, indent=2, ensure_ascii=False)
         now = datetime.now(timezone.utc).timestamp() * 1000
-        with LOG_PATH.open("a", encoding="utf-8") as f:
+        with LOG_PATH.open("w", encoding="utf-8") as f:
             f.write(str(now) + "\n")
             f.write(logs_json + "\n"*10)
 
@@ -99,3 +100,6 @@ if(__name__ == "__main__"):
             for key, val in searches.items():
                 searches_text += key + "\n\n" + val + "\n"*5
             f.write(searches_text)
+
+if __name__ == "__main__":
+    main()
